@@ -4,3 +4,9 @@ description: Charts for exploring loki stack possibilities
 type: application
 version: 0.1.0
 appVersion: "1.16.0"
+dependencies:
+  - name: loki-stack
+    condition: loki.enabled
+    repository: https://grafana.github.io/helm-charts
+    alias: loki
+    version: 2.6.1
