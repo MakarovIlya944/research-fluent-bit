@@ -4,3 +4,8 @@ dependencies:
     version: 2.6.1
     repository: https://grafana.github.io/helm-charts
     alias: loki
+  - name: fluent-bit
+    condition: fluent.enabled
+    version: 0.19.20
+    repository: https://fluent.github.io/helm-charts
+    alias: fluent

@@ -1,5 +1,6 @@
 import argparse
 from http.server import HTTPServer, BaseHTTPRequestHandler
+import logging
 
 
 class MyServer(BaseHTTPRequestHandler):
@@ -24,7 +25,11 @@ class MyServer(BaseHTTPRequestHandler):
         self._set_headers()
 
     def do_POST(self):
-        # Doesn't do anything with posted data
+        content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
+        post_data = self.rfile.read(content_length) # <--- Gets the data itself
+        logging.info("POST request,\nPath: %s\nHeaders:\n%s\n\nBody:\n%s\n",
+                str(self.path), str(self.headers), post_data.decode('utf-8'))
+        print(post_data.decode('utf-8'))
         self._set_headers()
         self.wfile.write(self._html("POST!"))
 

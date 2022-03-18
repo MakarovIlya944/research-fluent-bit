@@ -6,10 +6,10 @@
         {
             "label": "Docker: build",
             "type": "shell",
-            "command": "docker build -t app .",
+            "command": "docker build -t app:0.0.${input:tagversion} .",
             "windows":{
                 "options": {
-                    "cwd": "${workspaceFolder}/app"
+                    "cwd": "${workspaceFolder}/app",
                 }
             }
         },
@@ -18,6 +18,34 @@
             "type": "shell",
             "command": "docker run -it -p 80:80 app -p 80 -l 0.0.0.0",
             "problemMatcher": []
+        },
+        {
+            "label": "Deploy: Upgrade",
+            "type": "shell",
+            "command": "helm upgrade -i --set image.tag=0.0.${input:tagversion} mindbreez .",
+            "windows":{
+                "options": {
+                    "cwd": "${workspaceFolder}/deploy/logs-discovery",
+                }
+            },
+            "dependsOn": ["Docker: build"]
+        },
+        {
+            "label": "Powershell: curl x 10",
+            "type": "shell",
+            "command":[
+                "for($i=0;$i -lt 10; $i++){",
+                "    curl http://localhost:8080",
+                "}"
+            ]
+        }
+        
+    ],
+    "inputs": [
+        {
+            "id": "tagversion",
+            "description": "image tag version",
+            "type": "promptString"
         }
     ]
 }
