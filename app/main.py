@@ -19,7 +19,12 @@ class MyServer(BaseHTTPRequestHandler):
     def do_GET(self):
         self._set_headers()
         print(self.headers)
-        self.wfile.write(self._html("hi!"))
+        resp = ""
+        for header in self.headers:
+            resp += f'<br>{header}\t{self.headers.get(header)}'
+        logging.info(resp.replace('<br>','\n'),
+                str(self.path), str(self.headers))
+        self.wfile.write(self._html(resp))
 
     def do_HEAD(self):
         self._set_headers()
@@ -27,8 +32,6 @@ class MyServer(BaseHTTPRequestHandler):
     def do_POST(self):
         content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
         post_data = self.rfile.read(content_length) # <--- Gets the data itself
-        logging.info("POST request,\nPath: %s\nHeaders:\n%s\n\nBody:\n%s\n",
-                str(self.path), str(self.headers), post_data.decode('utf-8'))
         print(post_data.decode('utf-8'))
         self._set_headers()
         self.wfile.write(self._html("POST!"))
