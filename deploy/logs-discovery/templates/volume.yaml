@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: volume
+  labels:
+    volume: "loki"
+    {{- include "logs-discovery.labels" . | nindent 4 }}
+spec:
+  accessModes: 
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.loki.loki.persistence.size }}
+  selector:
+    matchLabels:
+      volume: "loki"
+      {{- include "logs-discovery.selectorLabels" . | nindent 6 }}
